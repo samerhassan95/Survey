@@ -19,9 +19,6 @@ export class Section {
   @ManyToOne(() => Survey, (s) => s.sections, { onDelete: 'CASCADE' })
   survey: Survey;
 
-  @OneToMany(() => Question, (q) => q.section, {
-    cascade: false,
-    eager: false,
-  })
+  @OneToMany(() => Question, (q) => q.section)
   questions: Question[];
 }

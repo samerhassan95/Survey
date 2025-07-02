@@ -6,10 +6,11 @@ import { Survey } from './surveys.entity';
 import { Section } from '../sections/section.entity';
 import { Question } from '../questions/question.entity';
 import { ThemesModule } from '../themes/themes.module';
+import { User } from 'src/users/user.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Survey, Section, Question]),
+    TypeOrmModule.forFeature([Survey, Section, Question, User]),
     ThemesModule,
   ],
   controllers: [SurveysController],

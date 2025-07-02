@@ -4,6 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { hashPassword, comparePasswords } from '../common/utils/hash.util';
+import { UserRole } from 'src/users/user.entity';
 @Injectable()
 export class AuthService {
   constructor(
@@ -16,6 +17,7 @@ export class AuthService {
     const user = await this.usersService.create({
       ...dto,
       password: hashed,
+      role: dto.role ?? UserRole.USER,
     });
 
     const payload = { sub: user.id, email: user.email, role: user.role };

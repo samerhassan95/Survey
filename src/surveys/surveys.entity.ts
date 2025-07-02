@@ -26,10 +26,7 @@ export class Survey {
   })
   theme: Theme;
 
-  @OneToMany(() => Section, (s) => s.survey, {
-    cascade: false,
-    eager: false,
-  })
+  @OneToMany(() => Section, (s) => s.survey)
   sections: Section[];
 
   @ManyToOne(() => User, (user) => user.surveys)

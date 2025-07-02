@@ -21,6 +21,9 @@ export class Question {
   @Column({ type: 'jsonb' }) // supports dynamic shape
   settings: Record<string, any>;
 
+  @Column({ type: 'jsonb', nullable: true }) // New field
+  translations?: Record<string, string>; // e.g. { en: '...', ar: '...' }
+
   @ManyToOne(() => Section, (section) => section.questions, {
     onDelete: 'CASCADE',
   })
