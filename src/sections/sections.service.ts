@@ -32,7 +32,7 @@ export class SectionsService {
         question_text: questionDto.question_text,
         type: questionDto.type,
         settings: questionDto.settings,
-        section, // ✅ attach parent!
+        section,
       });
 
       section.questions.push(question);

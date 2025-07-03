@@ -11,14 +11,13 @@ export enum UserRole {
   ADMIN = 'admin',
   USER = 'user',
 }
-// import { Survey } from '../surveys/survey.entity';
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ unique: true })
+  @Column()
   user_name: string;
 
   @Column({ unique: true })

@@ -63,7 +63,7 @@ export class SurveysController {
   })
   @ApiResponse({ status: 200, description: 'List of surveys' })
   async findAll(@Req() req: RequestWithUser) {
-    return this.surveysService.findAll(req.user); // ✅ this must pass the current user
+    return this.surveysService.findAll(req.user);
   }
 
   @Patch(':id')

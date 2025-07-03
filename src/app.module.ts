@@ -22,7 +22,6 @@ import { AuthModule } from './auth/auth.module';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (config: ConfigService) => {
-        console.log('DB_HOST:', config.get<string>('DB_HOST')); // Debug check
         return {
           type: 'postgres',
           host: config.get<string>('DB_HOST'),

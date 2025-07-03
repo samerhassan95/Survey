@@ -18,11 +18,11 @@ export class Question {
   @Column({ type: 'enum', enum: QuestionType })
   type: QuestionType;
 
-  @Column({ type: 'jsonb' }) // supports dynamic shape
+  @Column({ type: 'jsonb' })
   settings: Record<string, any>;
 
-  @Column({ type: 'jsonb', nullable: true }) // New field
-  translations?: Record<string, string>; // e.g. { en: '...', ar: '...' }
+  @Column({ type: 'jsonb', nullable: true })
+  translations?: Record<string, string>;
 
   @ManyToOne(() => Section, (section) => section.questions, {
     onDelete: 'CASCADE',

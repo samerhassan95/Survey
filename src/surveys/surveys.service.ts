@@ -70,7 +70,7 @@ export class SurveysService {
   }
 
   async findAll(user: User) {
-    console.log('Current user:', user); // 👈 log this to verify
+    console.log('Current user:', user);
 
     if (user.role === UserRole.ADMIN) {
       return this.surveyRepo.find({
@@ -79,7 +79,7 @@ export class SurveysService {
     }
 
     return this.surveyRepo.find({
-      where: { owner: { id: user.id } }, // 👈 ensure user.id is correct
+      where: { owner: { id: user.id } },
       relations: ['sections', 'sections.questions', 'theme', 'owner'],
     });
   }
