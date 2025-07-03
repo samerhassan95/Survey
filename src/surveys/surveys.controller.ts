@@ -24,6 +24,7 @@ import {
   ApiOperation,
   ApiResponse,
   ApiParam,
+  ApiBody,
 } from '@nestjs/swagger';
 
 interface RequestWithUser extends Request {
@@ -39,9 +40,14 @@ export class SurveysController {
 
   @Post()
   @ApiOperation({
-    summary: 'Create a new survey with nested sections/questions',
+    summary: 'Create a new survey with nested sections and questions',
+    description:
+      'Allows a user to create a survey with its sections and questions. Requires authentication.',
   })
+  @ApiBody({ type: CreateSurveyDto })
   @ApiResponse({ status: 201, description: 'Survey created successfully' })
+  @ApiResponse({ status: 400, description: 'Invalid input format' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   async create(@Body() dto: CreateSurveyDto, @Req() req: RequestWithUser) {
     if (!req.user) throw new UnauthorizedException();
     return this.surveysService.create(dto, req.user);
@@ -49,27 +55,42 @@ export class SurveysController {
 
   @Get(':id')
   @ApiOperation({
-    summary: 'Get survey with all nested sections and questions',
+    summary: 'Get a specific survey',
+    description: 'Returns a survey with all its nested sections and questions',
   })
   @ApiParam({ name: 'id', description: 'Survey UUID' })
-  @ApiResponse({ status: 200, description: 'Survey retrieved successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Survey retrieved successfully',
+  })
+  @ApiResponse({ status: 404, description: 'Survey not found' })
   async findOne(@Param('id') id: string) {
     return this.surveysService.findOne(id);
   }
 
   @Get()
   @ApiOperation({
-    summary: 'Get all surveys (admin sees all, users see their own)',
+    summary: 'List all surveys',
+    description:
+      'Returns all surveys. Admin sees all surveys, users see their own.',
   })
-  @ApiResponse({ status: 200, description: 'List of surveys' })
+  @ApiResponse({ status: 200, description: 'List of surveys returned' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   async findAll(@Req() req: RequestWithUser) {
     return this.surveysService.findAll(req.user);
   }
 
   @Patch(':id')
-  @ApiOperation({ summary: 'Update a survey (owner or admin only)' })
+  @ApiOperation({
+    summary: 'Update a survey',
+    description:
+      'Updates a survey only if the requester is the owner or an admin.',
+  })
   @ApiParam({ name: 'id', description: 'Survey UUID' })
+  @ApiBody({ type: UpdateSurveyDto })
   @ApiResponse({ status: 200, description: 'Survey updated successfully' })
+  @ApiResponse({ status: 403, description: 'Forbidden (not owner/admin)' })
+  @ApiResponse({ status: 404, description: 'Survey not found' })
   async update(
     @Param('id') id: string,
     @Body() dto: UpdateSurveyDto,
@@ -88,9 +109,15 @@ export class SurveysController {
   }
 
   @Delete(':id')
-  @ApiOperation({ summary: 'Delete a survey (owner or admin only)' })
+  @ApiOperation({
+    summary: 'Delete a survey',
+    description:
+      'Deletes a survey only if the requester is the owner or an admin.',
+  })
   @ApiParam({ name: 'id', description: 'Survey UUID' })
   @ApiResponse({ status: 200, description: 'Survey deleted successfully' })
+  @ApiResponse({ status: 403, description: 'Forbidden (not owner/admin)' })
+  @ApiResponse({ status: 404, description: 'Survey not found' })
   async remove(@Param('id') id: string, @Req() req: RequestWithUser) {
     const user = req.user;
     const survey = await this.surveysService.findOne(id);
